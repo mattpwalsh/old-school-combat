@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Shield (heater shape, outline only) -->
+  <path d="M 5,5 H 95 V 60 Q 50,95 5,60 Z"
+        fill="none" stroke="black" stroke-width="5" stroke-linejoin="round"/>
+
+  <!-- Sword (drawn vertically, rotated 45° so tip is top-right, pommel is bottom-left) -->
+  <g transform="rotate(45, 50, 50)">
+    <!-- Blade -->
+    <polygon points="50,4 47,63 53,63"
+             fill="white" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
+    <!-- Crossguard -->
+    <rect x="35" y="61" width="30" height="7" rx="2"
+          fill="white" stroke="black" stroke-width="1.5"/>
+    <!-- Grip -->
+    <rect x="47" y="68" width="6" height="14" rx="1.5"
+          fill="white" stroke="black" stroke-width="1.5"/>
+    <!-- Pommel -->
+    <circle cx="50" cy="89" r="6"
+            fill="white" stroke="black" stroke-width="1.5"/>
+  </g>
+</svg>

@@ -1,0 +1,15 @@
+{
+  "name": "Old School Combat",
+  "description": "Track old school D&D combat phases — initiative, morale, movement, missile, magic, and melee.",
+  "author": "mwalsh",
+  "icon": "/favicon.svg",
+  "version": "0.1.0",
+  "manifest_version": 1,
+  "action": {
+    "title": "Old School Combat",
+    "icon": "/favicon.svg",
+    "popover": "/",
+    "height": 580,
+    "width": 380
+  }
+}

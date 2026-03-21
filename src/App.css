@@ -1,0 +1,623 @@
+/* ── Variables ────────────────────────────────────────────────────────────── */
+:root {
+  --bg: #1a1209;
+  --surface: #231a0d;
+  --surface-raised: #2c2010;
+  --border: #5a3e1a;
+  --border-light: #7a5a2a;
+  --gold: #c8972d;
+  --gold-light: #e8b86d;
+  --gold-dim: #7a5a1a;
+  --text: #f0e6d3;
+  --text-dim: #9a8060;
+  --text-muted: #6a5040;
+  --red: #4a1010;
+  --red-border: #8b2a2a;
+  --winner-bg: #0e1a26;
+  --winner-border: #2a5a8a;
+  --loser-bg: #260e0e;
+  --loser-border: #7a2a2a;
+  --radius: 4px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+#root {
+  width: 100%;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Georgia", "Times New Roman", serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── Layout ───────────────────────────────────────────────────────────────── */
+.gm-panel,
+.player-view {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  padding: 12px;
+  gap: 12px;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+
+.panel-title {
+  font-size: 15px;
+  font-weight: bold;
+  color: var(--gold-light);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.round-badge {
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  color: var(--gold);
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: var(--radius);
+}
+
+/* ── Sections ─────────────────────────────────────────────────────────────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.section-title {
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* ── Party List ───────────────────────────────────────────────────────────── */
+.party-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.party-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.party-name-input {
+  flex: 1;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 5px 8px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 13px;
+}
+
+.party-name-input:focus {
+  outline: none;
+  border-color: var(--gold-dim);
+}
+
+.initiative-input {
+  width: 64px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  color: var(--gold-light);
+  padding: 5px 8px;
+  border-radius: var(--radius);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.initiative-input:focus {
+  outline: none;
+  border-color: var(--gold);
+}
+
+/* ── Checkbox ─────────────────────────────────────────────────────────────── */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.checkbox-row input[type="checkbox"] {
+  accent-color: var(--gold);
+  width: 14px;
+  height: 14px;
+}
+
+.defer-row {
+  margin-top: 4px;
+  padding: 8px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+/* ── Initiative Result ────────────────────────────────────────────────────── */
+.initiative-result {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.result-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--radius);
+  border: 1px solid;
+}
+
+.result-row.winner {
+  background: var(--winner-bg);
+  border-color: var(--winner-border);
+}
+
+.result-row.middle {
+  background: var(--surface-raised);
+  border-color: var(--gold-dim);
+}
+
+.result-row.loser {
+  background: var(--loser-bg);
+  border-color: var(--loser-border);
+}
+
+.result-rank {
+  font-size: 11px;
+  color: var(--text-muted);
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.result-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.result-roll {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.result-label {
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+/* ── Current Phase Block ──────────────────────────────────────────────────── */
+.current-phase-block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+}
+
+.current-phase-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: var(--gold-light);
+}
+
+.phase-progress {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+/* ── Combatants ───────────────────────────────────────────────────────────── */
+.combatants,
+.player-combatants {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.combatant-vs {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.winner-tag {
+  color: #5a9fd4;
+}
+.loser-tag {
+  color: #d47a5a;
+}
+
+/* ── Phase List ───────────────────────────────────────────────────────────── */
+.phase-sequence-section {
+  flex: 1;
+  overflow: auto;
+}
+
+.phase-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.phase-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px;
+  border-radius: var(--radius);
+  font-size: 12px;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-left-width: 2px;
+}
+
+.phase-item.group-initiative {
+  border-left-color: var(--border);
+}
+.phase-item.group-winner {
+  border-left-color: var(--winner-border);
+}
+.phase-item.group-middle {
+  border-left-color: var(--gold-dim);
+}
+.phase-item.group-loser {
+  border-left-color: var(--loser-border);
+}
+
+.phase-item.current {
+  background: var(--surface-raised);
+  border-color: var(--gold-dim);
+  border-left-color: var(--gold);
+  color: var(--gold-light);
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.phase-item.done {
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.phase-item-marker {
+  font-size: 10px;
+  width: 12px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ── Buttons ──────────────────────────────────────────────────────────────── */
+.btn {
+  padding: 7px 16px;
+  border-radius: var(--radius);
+  border: 1px solid;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: opacity 0.1s;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn:not(:disabled):hover {
+  opacity: 0.85;
+}
+
+.btn.primary {
+  background: var(--gold);
+  border-color: var(--gold-light);
+  color: #1a1209;
+}
+
+.btn.secondary {
+  background: var(--surface-raised);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.btn.danger {
+  background: var(--red);
+  border-color: var(--red-border);
+  color: var(--text);
+}
+
+.btn.full-width {
+  width: 100%;
+}
+
+.btn-icon {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.1s;
+  flex-shrink: 0;
+}
+
+.btn-icon:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-icon.danger:not(:disabled):hover {
+  background: var(--red);
+  border-color: var(--red-border);
+  color: var(--text);
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: var(--gold-dim);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 2px 0;
+  text-align: left;
+}
+
+.btn-text:hover {
+  color: var(--gold);
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+.panel-footer {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.panel-footer .btn {
+  flex: 1;
+}
+
+/* ── Player View ──────────────────────────────────────────────────────────── */
+.player-view.idle {
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.idle-icon {
+  font-size: 40px;
+  opacity: 0.3;
+}
+
+.idle-text {
+  color: var(--text-dim);
+  font-size: 14px;
+}
+
+.player-phase-block {
+  padding: 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  text-align: center;
+}
+
+.player-phase-block.group-winner {
+  border-color: var(--winner-border);
+  background: var(--winner-bg);
+}
+
+.player-phase-block.group-loser {
+  border-color: var(--loser-border);
+  background: var(--loser-bg);
+}
+
+.player-phase-label {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--gold-light);
+  margin-bottom: 4px;
+}
+
+.player-round {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.player-phase-list {
+  flex: 1;
+  overflow: auto;
+}
+
+/* ── Banner ───────────────────────────────────────────────────────────────── */
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  min-height: 64px;
+  background: var(--surface);
+  width: 100%;
+}
+
+.banner.banner-declarations {
+  flex-direction: column;
+  align-items: stretch;
+  padding: 10px 14px;
+  gap: 8px;
+}
+
+.banner-header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.banner-declarations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-left: 20px;
+}
+
+.banner-declaration-item {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.banner.group-winner {
+  border-bottom-color: var(--winner-border);
+  background: var(--winner-bg);
+}
+
+.banner.group-loser {
+  border-bottom-color: var(--loser-border);
+  background: var(--loser-bg);
+}
+
+.banner-icon {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  mask: url(/favicon.svg) 0% 0% / 36px;
+  color: white;
+  background-color: white;
+}
+
+.banner-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.banner-phase {
+  font-size: 32px;
+  font-weight: bold;
+  color: var(--gold-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.banner-round {
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Header right group ───────────────────────────────────────────────────── */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Party name label (read-only, in initiative entry) ────────────────────── */
+.party-name-label {
+  flex: 1;
+  color: var(--text);
+  font-size: 13px;
+  padding: 5px 8px;
+}
+
+/* ── Declarations (active phase display) ──────────────────────────────────── */
+.declarations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.declaration-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+}
+
+.declaration-bullet {
+  color: var(--gold-dim);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+
+.no-declarations {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-style: italic;
+}
+
+/* ── No Scene ─────────────────────────────────────────────────────────────── */
+.no-scene {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 8px;
+  text-align: center;
+  padding: 24px;
+}
+
+.no-scene-icon {
+  font-size: 36px;
+  opacity: 0.3;
+  margin-bottom: 8px;
+}
+
+.no-scene-sub {
+  color: var(--text-dim);
+  font-size: 12px;
+}
