@@ -21,6 +21,28 @@ export default function App({ isBanner = false }: AppProps) {
   const [sceneReady, setSceneReady] = useState(false);
 
   useEffect(() => {
+    const applyTheme = (theme: {
+      mode: string;
+      primary: { main: string; light: string; contrastText: string };
+      background: { default: string; paper: string };
+      text: { primary: string; secondary: string; disabled: string };
+    }) => {
+      const root = document.documentElement;
+      root.style.setProperty('--bg', theme.background.default);
+      root.style.setProperty('--surface-raised', theme.background.paper);
+      root.style.setProperty('--text', theme.text.primary);
+      root.style.setProperty('--text-dim', theme.text.secondary);
+      root.style.setProperty('--text-muted', theme.text.disabled);
+      root.style.setProperty('--accent', theme.primary.main);
+      root.style.setProperty('--accent-light', theme.primary.light);
+      root.style.setProperty('--accent-on', theme.primary.contrastText);
+      const isDark = theme.mode === 'DARK';
+      root.style.setProperty('--border', isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)');
+      root.style.setProperty('--border-strong', isDark ? 'rgba(255,255,255,0.24)' : 'rgba(0,0,0,0.24)');
+    };
+    OBR.theme.getTheme().then(applyTheme);
+    const unsubTheme = OBR.theme.onChange(applyTheme);
+
     OBR.player.getRole().then(r => setRole(r as 'GM' | 'PLAYER'));
 
     const loadScene = async () => {
@@ -68,6 +90,7 @@ export default function App({ isBanner = false }: AppProps) {
     });
 
     return () => {
+      unsubTheme();
       unsubReady();
       unsubMeta();
     };

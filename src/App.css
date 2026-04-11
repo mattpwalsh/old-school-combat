@@ -1,36 +1,24 @@
-/* ── Variables ────────────────────────────────────────────────────────────── */
+/* ── Variables (fallbacks; overridden at runtime by OBR.theme) ────────────── */
 :root {
-  --bg: #1a1209;
-  --surface: #231a0d;
-  --surface-raised: #2c2010;
-  --border: #5a3e1a;
-  --border-light: #7a5a2a;
-  --gold: #c8972d;
-  --gold-light: #e8b86d;
-  --gold-dim: #7a5a1a;
-  --text: #f0e6d3;
-  --text-dim: #9a8060;
-  --text-muted: #6a5040;
-  --red: #4a1010;
-  --red-border: #8b2a2a;
-  --winner-bg: #0e1a26;
-  --winner-border: #2a5a8a;
-  --loser-bg: #260e0e;
-  --loser-border: #7a2a2a;
+  --bg: #1a1a1a;
+  --surface-raised: #2a2a2a;
+  --border: rgba(255,255,255,0.12);
+  --border-strong: rgba(255,255,255,0.24);
+  --text: #ffffff;
+  --text-dim: rgba(255,255,255,0.7);
+  --text-muted: rgba(255,255,255,0.38);
+  --accent: #3d8ef8;
+  --accent-light: #6aacff;
+  --accent-on: #000000;
+
+  /* Fixed semantic colors */
+  --danger-bg: rgba(180,30,30,0.2);
+  --danger-border: rgba(180,30,30,0.5);
+  --winner-bg: rgba(30,80,160,0.15);
+  --winner-border: rgba(60,130,220,0.4);
+  --loser-bg: rgba(160,30,30,0.15);
+  --loser-border: rgba(200,60,60,0.4);
   --radius: 4px;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-}
-
-#root {
-  width: 100%;
 }
 
 * {
@@ -42,9 +30,13 @@ body {
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: "Georgia", "Times New Roman", serif;
+  font-family: system-ui, -apple-system, sans-serif;
   font-size: 14px;
   line-height: 1.5;
+}
+
+#root {
+  width: 100%;
 }
 
 /* ── Layout ───────────────────────────────────────────────────────────────── */
@@ -68,16 +60,15 @@ body {
 
 .panel-title {
   font-size: 15px;
-  font-weight: bold;
-  color: var(--gold-light);
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.02em;
 }
 
 .round-badge {
   background: var(--surface-raised);
   border: 1px solid var(--border);
-  color: var(--gold);
+  color: var(--text-dim);
   font-size: 12px;
   padding: 2px 8px;
   border-radius: var(--radius);
@@ -92,8 +83,8 @@ body {
 
 .section-title {
   font-size: 11px;
-  font-weight: bold;
-  color: var(--text-dim);
+  font-weight: 600;
+  color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
@@ -124,14 +115,14 @@ body {
 
 .party-name-input:focus {
   outline: none;
-  border-color: var(--gold-dim);
+  border-color: var(--accent);
 }
 
 .initiative-input {
   width: 64px;
   background: var(--surface-raised);
   border: 1px solid var(--border);
-  color: var(--gold-light);
+  color: var(--text);
   padding: 5px 8px;
   border-radius: var(--radius);
   font-family: inherit;
@@ -142,7 +133,7 @@ body {
 
 .initiative-input:focus {
   outline: none;
-  border-color: var(--gold);
+  border-color: var(--accent);
 }
 
 /* ── Checkbox ─────────────────────────────────────────────────────────────── */
@@ -156,7 +147,7 @@ body {
 }
 
 .checkbox-row input[type="checkbox"] {
-  accent-color: var(--gold);
+  accent-color: var(--accent);
   width: 14px;
   height: 14px;
 }
@@ -192,7 +183,7 @@ body {
 
 .result-row.middle {
   background: var(--surface-raised);
-  border-color: var(--gold-dim);
+  border-color: var(--border);
 }
 
 .result-row.loser {
@@ -238,7 +229,7 @@ body {
 .current-phase-label {
   font-size: 18px;
   font-weight: bold;
-  color: var(--gold-light);
+  color: var(--text);
 }
 
 .phase-progress {
@@ -261,7 +252,7 @@ body {
 }
 
 .winner-tag {
-  color: #5a9fd4;
+  color: var(--accent-light);
 }
 .loser-tag {
   color: #d47a5a;
@@ -293,13 +284,13 @@ body {
 }
 
 .phase-item.group-initiative {
-  border-left-color: var(--border);
+  border-left-color: var(--border-strong);
 }
 .phase-item.group-winner {
   border-left-color: var(--winner-border);
 }
 .phase-item.group-middle {
-  border-left-color: var(--gold-dim);
+  border-left-color: var(--border);
 }
 .phase-item.group-loser {
   border-left-color: var(--loser-border);
@@ -307,9 +298,9 @@ body {
 
 .phase-item.current {
   background: var(--surface-raised);
-  border-color: var(--gold-dim);
-  border-left-color: var(--gold);
-  color: var(--gold-light);
+  border-color: var(--border);
+  border-left-color: var(--accent);
+  color: var(--text);
   font-weight: bold;
   font-size: 13px;
 }
@@ -333,9 +324,8 @@ body {
   border: 1px solid;
   font-family: inherit;
   font-size: 13px;
-  font-weight: bold;
+  font-weight: 600;
   cursor: pointer;
-  letter-spacing: 0.03em;
   transition: opacity 0.1s;
 }
 
@@ -349,9 +339,9 @@ body {
 }
 
 .btn.primary {
-  background: var(--gold);
-  border-color: var(--gold-light);
-  color: #1a1209;
+  background: var(--accent);
+  border-color: var(--accent-light);
+  color: var(--accent-on);
 }
 
 .btn.secondary {
@@ -361,8 +351,8 @@ body {
 }
 
 .btn.danger {
-  background: var(--red);
-  border-color: var(--red-border);
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
   color: var(--text);
 }
 
@@ -392,24 +382,25 @@ body {
 }
 
 .btn-icon.danger:not(:disabled):hover {
-  background: var(--red);
-  border-color: var(--red-border);
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
   color: var(--text);
 }
 
 .btn-text {
   background: none;
   border: none;
-  color: var(--gold-dim);
+  color: var(--accent);
   font-family: inherit;
   font-size: 13px;
   cursor: pointer;
   padding: 2px 0;
   text-align: left;
+  opacity: 0.8;
 }
 
 .btn-text:hover {
-  color: var(--gold);
+  opacity: 1;
 }
 
 /* ── Footer ───────────────────────────────────────────────────────────────── */
@@ -462,7 +453,7 @@ body {
 .player-phase-label {
   font-size: 22px;
   font-weight: bold;
-  color: var(--gold-light);
+  color: var(--text);
   margin-bottom: 4px;
 }
 
@@ -483,7 +474,7 @@ body {
   gap: 10px;
   padding: 0 14px;
   min-height: 64px;
-  background: var(--surface);
+  background: var(--bg);
   width: 100%;
 }
 
@@ -513,13 +504,13 @@ body {
 }
 
 .banner.group-winner {
-  border-bottom-color: var(--winner-border);
   background: var(--winner-bg);
+  border-bottom: 1px solid var(--winner-border);
 }
 
 .banner.group-loser {
-  border-bottom-color: var(--loser-border);
   background: var(--loser-bg);
+  border-bottom: 1px solid var(--loser-border);
 }
 
 .banner-icon {
@@ -527,8 +518,7 @@ body {
   height: 36px;
   flex-shrink: 0;
   mask: url(/favicon.svg) 0% 0% / 36px;
-  color: white;
-  background-color: white;
+  background-color: var(--text);
 }
 
 .banner-content {
@@ -540,7 +530,7 @@ body {
 .banner-phase {
   font-size: 32px;
   font-weight: bold;
-  color: var(--gold-light);
+  color: var(--text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -588,7 +578,7 @@ body {
 }
 
 .declaration-bullet {
-  color: var(--gold-dim);
+  color: var(--text-muted);
   font-size: 10px;
   flex-shrink: 0;
 }
