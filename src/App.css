@@ -2,22 +2,22 @@
 :root {
   --bg: #1a1a1a;
   --surface-raised: #2a2a2a;
-  --border: rgba(255,255,255,0.12);
-  --border-strong: rgba(255,255,255,0.24);
+  --border: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.24);
   --text: #ffffff;
-  --text-dim: rgba(255,255,255,0.7);
-  --text-muted: rgba(255,255,255,0.38);
+  --text-dim: rgba(255, 255, 255, 0.7);
+  --text-muted: rgba(255, 255, 255, 0.38);
   --accent: #3d8ef8;
   --accent-light: #6aacff;
   --accent-on: #000000;
 
   /* Fixed semantic colors */
-  --danger-bg: rgba(180,30,30,0.2);
-  --danger-border: rgba(180,30,30,0.5);
-  --winner-bg: rgba(30,80,160,0.15);
-  --winner-border: rgba(60,130,220,0.4);
-  --loser-bg: rgba(160,30,30,0.15);
-  --loser-border: rgba(200,60,60,0.4);
+  --danger-bg: rgba(180, 30, 30, 0.2);
+  --danger-border: rgba(180, 30, 30, 0.5);
+  --winner-bg: rgba(30, 80, 160, 0.15);
+  --winner-border: rgba(60, 130, 220, 0.4);
+  --loser-bg: rgba(160, 30, 30, 0.15);
+  --loser-border: rgba(200, 60, 60, 0.4);
   --radius: 4px;
 }
 
@@ -30,7 +30,10 @@
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
   font-size: 14px;
   line-height: 1.5;
 }
@@ -471,9 +474,10 @@ body {
 .banner {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
   padding: 0 14px;
-  min-height: 64px;
+  min-height: 65px;
   background: var(--bg);
   width: 100%;
 }
