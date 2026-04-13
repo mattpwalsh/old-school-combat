@@ -1,22 +1,18 @@
-import { useState, useEffect, useCallback } from 'react';
-import OBR from '@owlbear-rodeo/sdk';
-import {
-  DEFAULT_STATE,
-  METADATA_KEY,
-  BANNER_POPOVER_ID,
-} from './combat';
-import type { CombatState } from './types';
-import GMPanel from './components/GMPanel';
-import PlayerView from './components/PlayerView';
-import BannerView from './components/BannerView';
-import './App.css';
+import { useState, useEffect, useCallback } from "react";
+import OBR from "@owlbear-rodeo/sdk";
+import { DEFAULT_STATE, METADATA_KEY, BANNER_POPOVER_ID } from "./combat";
+import type { CombatState } from "./types";
+import GMPanel from "./components/GMPanel";
+import PlayerView from "./components/PlayerView";
+import BannerView from "./components/BannerView";
+import "./App.css";
 
 interface AppProps {
   isBanner?: boolean;
 }
 
 export default function App({ isBanner = false }: AppProps) {
-  const [role, setRole] = useState<'GM' | 'PLAYER' | null>(null);
+  const [role, setRole] = useState<"GM" | "PLAYER" | null>(null);
   const [state, setState] = useState<CombatState>(DEFAULT_STATE);
   const [sceneReady, setSceneReady] = useState(false);
 
@@ -28,22 +24,28 @@ export default function App({ isBanner = false }: AppProps) {
       text: { primary: string; secondary: string; disabled: string };
     }) => {
       const root = document.documentElement;
-      root.style.setProperty('--bg', theme.background.default);
-      root.style.setProperty('--surface-raised', theme.background.paper);
-      root.style.setProperty('--text', theme.text.primary);
-      root.style.setProperty('--text-dim', theme.text.secondary);
-      root.style.setProperty('--text-muted', theme.text.disabled);
-      root.style.setProperty('--accent', theme.primary.main);
-      root.style.setProperty('--accent-light', theme.primary.light);
-      root.style.setProperty('--accent-on', theme.primary.contrastText);
-      const isDark = theme.mode === 'DARK';
-      root.style.setProperty('--border', isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)');
-      root.style.setProperty('--border-strong', isDark ? 'rgba(255,255,255,0.24)' : 'rgba(0,0,0,0.24)');
+      root.style.setProperty("--bg", theme.background.default);
+      root.style.setProperty("--surface-raised", theme.background.paper);
+      root.style.setProperty("--text", theme.text.primary);
+      root.style.setProperty("--text-dim", theme.text.secondary);
+      root.style.setProperty("--text-muted", theme.text.disabled);
+      root.style.setProperty("--accent", theme.primary.main);
+      root.style.setProperty("--accent-light", theme.primary.light);
+      root.style.setProperty("--accent-on", theme.primary.contrastText);
+      const isDark = theme.mode === "DARK";
+      root.style.setProperty(
+        "--border",
+        isDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.12)",
+      );
+      root.style.setProperty(
+        "--border-strong",
+        isDark ? "rgba(255,255,255,0.24)" : "rgba(0,0,0,0.24)",
+      );
     };
     OBR.theme.getTheme().then(applyTheme);
     const unsubTheme = OBR.theme.onChange(applyTheme);
 
-    OBR.player.getRole().then(r => setRole(r as 'GM' | 'PLAYER'));
+    OBR.player.getRole().then((r) => setRole(r as "GM" | "PLAYER"));
 
     const loadScene = async () => {
       const ready = await OBR.scene.isReady();
@@ -51,7 +53,12 @@ export default function App({ isBanner = false }: AppProps) {
         setSceneReady(true);
         const metadata = await OBR.scene.getMetadata();
         const stored = metadata[METADATA_KEY] as CombatState | undefined;
-        if (stored) setState({ ...DEFAULT_STATE, ...stored, config: { ...DEFAULT_STATE.config, ...stored.config } });
+        if (stored)
+          setState({
+            ...DEFAULT_STATE,
+            ...stored,
+            config: { ...DEFAULT_STATE.config, ...stored.config },
+          });
       }
     };
     loadScene();
@@ -61,7 +68,12 @@ export default function App({ isBanner = false }: AppProps) {
       if (ready) {
         const metadata = await OBR.scene.getMetadata();
         const stored = metadata[METADATA_KEY] as CombatState | undefined;
-        if (stored) setState({ ...DEFAULT_STATE, ...stored, config: { ...DEFAULT_STATE.config, ...stored.config } });
+        if (stored)
+          setState({
+            ...DEFAULT_STATE,
+            ...stored,
+            config: { ...DEFAULT_STATE.config, ...stored.config },
+          });
       } else {
         setState(DEFAULT_STATE);
       }
@@ -69,13 +81,20 @@ export default function App({ isBanner = false }: AppProps) {
 
     const unsubMeta = OBR.scene.onMetadataChange((metadata) => {
       const stored = metadata[METADATA_KEY] as CombatState | undefined;
-      if (stored) setState({ ...DEFAULT_STATE, ...stored, config: { ...DEFAULT_STATE.config, ...stored.config } });
+      if (stored)
+        setState({
+          ...DEFAULT_STATE,
+          ...stored,
+          config: { ...DEFAULT_STATE.config, ...stored.config },
+        });
 
       if (!isBanner) {
         if (stored?.active) {
-          const isDeclarations = stored.currentPhase === 'declarations';
-          const itemCount = isDeclarations ? (stored.config?.declarations?.length ?? 0) : 0;
-          const bannerHeight = isDeclarations ? 64 + itemCount * 36 + 16 : 64;
+          const isDeclarations = stored.currentPhase === "declarations";
+          const itemCount = isDeclarations
+            ? (stored.config?.declarations?.length ?? 0)
+            : 0;
+          const bannerHeight = isDeclarations ? 85 + itemCount * 28 : 85;
           OBR.popover.open({
             id: BANNER_POPOVER_ID,
             url: `${window.location.origin}/?view=banner`,
@@ -114,7 +133,7 @@ export default function App({ isBanner = false }: AppProps) {
     );
   }
 
-  if (role === 'GM') {
+  if (role === "GM") {
     return <GMPanel state={state} onUpdate={updateState} />;
   }
 

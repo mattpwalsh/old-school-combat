@@ -26,6 +26,9 @@
   margin: 0;
   padding: 0;
 }
+html {
+  height: 100%;
+}
 
 body {
   background: var(--bg);
@@ -36,10 +39,12 @@ body {
     sans-serif;
   font-size: 14px;
   line-height: 1.5;
+  height: 100%;
 }
 
 #root {
   width: 100%;
+  height: 100%;
 }
 
 /* ── Layout ───────────────────────────────────────────────────────────────── */
@@ -444,7 +449,6 @@ body {
 }
 
 .player-phase-block.group-winner {
-  border-color: var(--winner-border);
   background: var(--winner-bg);
 }
 
@@ -473,20 +477,14 @@ body {
 /* ── Banner ───────────────────────────────────────────────────────────────── */
 .banner {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 0 14px;
-  min-height: 65px;
-  background: var(--bg);
-  width: 100%;
-}
-
-.banner.banner-declarations {
   flex-direction: column;
   align-items: stretch;
-  padding: 10px 14px;
+  justify-content: center;
   gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg);
+  width: 100%;
+  height: 100%;
 }
 
 .banner-header-row {
@@ -509,12 +507,10 @@ body {
 
 .banner.group-winner {
   background: var(--winner-bg);
-  border-bottom: 1px solid var(--winner-border);
 }
 
 .banner.group-loser {
   background: var(--loser-bg);
-  border-bottom: 1px solid var(--loser-border);
 }
 
 .banner-icon {
@@ -523,12 +519,12 @@ body {
   flex-shrink: 0;
   mask: url(/favicon.svg) 0% 0% / 36px;
   background-color: var(--text);
+  margin-top: -10px;
 }
 
 .banner-content {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
 }
 
 .banner-phase {
