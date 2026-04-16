@@ -22,6 +22,7 @@ interface SubProps extends Props {
 
 export default function GMPanel({ state, onUpdate }: Props) {
   const [showAdmin, setShowAdmin] = useState(false);
+  const [lastRolls, setLastRolls] = useState<{ name: string; roll: number }[] | null>(null);
 
   const adminBtn = (
     <button className="btn-icon" onClick={() => setShowAdmin(true)} title="Settings">⚙</button>
@@ -40,7 +41,9 @@ export default function GMPanel({ state, onUpdate }: Props) {
   }
 
   if (state.currentPhase === 'initiative' && state.orderedPartyIds.length === 0) {
-    return <InitiativeEntry state={state} onUpdate={onUpdate} adminBtn={adminBtn} />;
+    return <InitiativeEntry state={state} onUpdate={onUpdate} adminBtn={adminBtn}
+      lastRolls={lastRolls} onRollResult={setLastRolls}
+      isTieBreak={state.tiedPartyIds.length > 0} />;
   }
 
   if (state.currentPhase === 'initiative' && state.orderedPartyIds.length > 0) {
@@ -56,15 +59,20 @@ interface AdminProps extends Props {
   onClose: () => void;
 }
 
+const DIE_SIZES = [4, 6, 8, 10, 12, 20];
+
 function AdminPanel({ state, onUpdate, onClose }: AdminProps) {
   const [allowDefer, setAllowDefer] = useState(state.config.allowDefer);
   const [declarations, setDeclarations] = useState<string[]>(state.config.declarations);
+  const [initiativeDie, setInitiativeDie] = useState(state.config.initiativeDie ?? 6);
+
+  // RNG tester state
+  const [rngCount, setRngCount] = useState(100);
+  const [rngResults, setRngResults] = useState<number[]>([]);
 
   const addDeclaration = () => setDeclarations(prev => [...prev, '']);
-
   const updateDeclaration = (i: number, value: string) =>
     setDeclarations(prev => prev.map((d, j) => j === i ? value : d));
-
   const removeDeclaration = (i: number) =>
     setDeclarations(prev => prev.filter((_, j) => j !== i));
 
@@ -74,10 +82,24 @@ function AdminPanel({ state, onUpdate, onClose }: AdminProps) {
       config: {
         allowDefer,
         declarations: declarations.filter(d => d.trim() !== ''),
+        initiativeDie,
       },
     });
     onClose();
   };
+
+  const runRngTest = () => {
+    setRngResults(
+      Array.from({ length: rngCount }, () => Math.floor(Math.random() * initiativeDie) + 1)
+    );
+  };
+
+  const freq = Array.from({ length: initiativeDie }, (_, i) => {
+    const value = i + 1;
+    const count = rngResults.filter(r => r === value).length;
+    return { value, count };
+  });
+  const maxCount = Math.max(1, ...freq.map(f => f.count));
 
   return (
     <div className="gm-panel">
@@ -95,6 +117,21 @@ function AdminPanel({ state, onUpdate, onClose }: AdminProps) {
           />
           Allow initiative winners to defer their action
         </label>
+      </section>
+
+      <section className="section">
+        <h2 className="section-title">Initiative Die</h2>
+        <div className="die-selector">
+          {DIE_SIZES.map(d => (
+            <button
+              key={d}
+              className={`btn-die ${initiativeDie === d ? 'active' : ''}`}
+              onClick={() => { setInitiativeDie(d); setRngResults([]); }}
+            >
+              d{d}
+            </button>
+          ))}
+        </div>
       </section>
 
       <section className="section">
@@ -119,6 +156,38 @@ function AdminPanel({ state, onUpdate, onClose }: AdminProps) {
           ))}
         </div>
         <button className="btn-text" onClick={addDeclaration}>+ Add Item</button>
+      </section>
+
+      <section className="section">
+        <h2 className="section-title">RNG Test (d{initiativeDie})</h2>
+        <div className="rng-controls">
+          <input
+            className="party-name-input rng-count-input"
+            type="number"
+            min={1}
+            max={10000}
+            value={rngCount}
+            onChange={e => setRngCount(Math.max(1, parseInt(e.target.value) || 1))}
+          />
+          <span className="rng-label">rolls</span>
+          <button className="btn secondary" onClick={runRngTest}>Roll</button>
+        </div>
+        {rngResults.length > 0 && (
+          <div className="rng-chart">
+            {freq.map(({ value, count }) => (
+              <div key={value} className="rng-bar-col">
+                <span className="rng-bar-count">{count}</span>
+                <div className="rng-bar-track">
+                  <div
+                    className="rng-bar-fill"
+                    style={{ height: `${(count / maxCount) * 100}%` }}
+                  />
+                </div>
+                <span className="rng-bar-label">{value}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <div className="panel-footer">
@@ -238,15 +307,42 @@ function DeclarationsView({ state, onUpdate, adminBtn }: SubProps) {
 
 // ─── Initiative Entry ─────────────────────────────────────────────────────────
 
-function InitiativeEntry({ state, onUpdate, adminBtn }: SubProps) {
+interface InitiativeEntryProps extends SubProps {
+  lastRolls: { name: string; roll: number }[] | null;
+  onRollResult: (rolls: { name: string; roll: number }[]) => void;
+  isTieBreak: boolean;
+}
+
+function InitiativeEntry({ state, onUpdate, adminBtn, lastRolls, onRollResult, isTieBreak }: InitiativeEntryProps) {
   const [parties, setParties] = useState<Party[]>(state.parties);
+
+  const die = state.config.initiativeDie ?? 6;
+  const visibleParties = isTieBreak
+    ? parties.filter(p => state.tiedPartyIds.includes(p.id))
+    : parties;
 
   const updatePartyInitiative = (id: string, value: string) => {
     const n = value === '' ? null : parseInt(value, 10);
     setParties(prev => prev.map(p => p.id === id ? { ...p, initiative: n !== null && isNaN(n) ? null : n } : p));
   };
 
-  const canResolve = parties.filter(p => p.initiative !== null).length >= 2;
+  const rollAll = () => {
+    const rolled = parties.map(p =>
+      (!isTieBreak || state.tiedPartyIds.includes(p.id))
+        ? { ...p, initiative: Math.floor(Math.random() * die) + 1 }
+        : p,
+    );
+    setParties(rolled);
+    onRollResult(
+      rolled
+        .filter(p => !isTieBreak || state.tiedPartyIds.includes(p.id))
+        .map(p => ({ name: p.name, roll: p.initiative as number })),
+    );
+  };
+
+  const canResolve = isTieBreak
+    ? state.tiedPartyIds.every(id => parties.find(p => p.id === id)?.initiative !== null)
+    : parties.filter(p => p.initiative !== null).length >= 2;
 
   const handleResolve = () => {
     const updated: CombatState = { ...state, parties };
@@ -266,9 +362,29 @@ function InitiativeEntry({ state, onUpdate, adminBtn }: SubProps) {
       </header>
 
       <section className="section">
-        <h2 className="section-title">Initiative</h2>
+        <div className="section-header-row">
+          <h2 className="section-title">
+            {isTieBreak ? 'Tie — Reroll Initiative' : `Initiative (d${die})`}
+          </h2>
+          <button className="btn-text" onClick={rollAll}>Roll All</button>
+        </div>
+        {isTieBreak && (
+          <div className="tie-notice">
+            Tied parties must reroll (d{die}).
+          </div>
+        )}
+        {lastRolls && (
+          <div className="roll-banner">
+            {lastRolls.map(({ name, roll }) => (
+              <span key={name} className="roll-result">
+                <span className="roll-name">{name}</span>
+                <span className="roll-value">{roll}</span>
+              </span>
+            ))}
+          </div>
+        )}
         <div className="party-list">
-          {parties.map(party => (
+          {visibleParties.map(party => (
             <div key={party.id} className="party-row">
               <span className="party-name-label">{party.name}</span>
               <input

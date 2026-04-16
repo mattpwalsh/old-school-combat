@@ -11,11 +11,13 @@ export const DEFAULT_STATE: CombatState = {
     { id: 'monsters', name: 'Monsters', initiative: null },
   ],
   orderedPartyIds: [],
+  tiedPartyIds: [],
   currentPhase: 'initiative',
   winnerDeferred: false,
   config: {
     allowDefer: false,
     declarations: ['Melee Movement', 'Spell Casting'],
+    initiativeDie: 6,
   },
 };
 
@@ -96,11 +98,13 @@ export function beginCombat(state: CombatState): CombatState {
     round: 1,
     currentPhase: 'declarations',
     orderedPartyIds: [],
+    tiedPartyIds: [],
     winnerDeferred: false,
   };
 }
 
-/** Sorts parties by initiative and sets orderedPartyIds; stays on initiative phase. */
+/** Sorts parties by initiative and sets orderedPartyIds; stays on initiative phase.
+ *  If any parties tie, sets tiedPartyIds and resets their initiative to null for a reroll. */
 export function resolveInitiative(state: CombatState): CombatState {
   const sorted = [...state.parties]
     .filter(p => p.initiative !== null)
@@ -108,9 +112,34 @@ export function resolveInitiative(state: CombatState): CombatState {
 
   if (sorted.length < 2) return state;
 
+  // Group parties by initiative value to detect ties
+  const groups = new Map<number, string[]>();
+  for (const p of sorted) {
+    const val = p.initiative as number;
+    if (!groups.has(val)) groups.set(val, []);
+    groups.get(val)!.push(p.id);
+  }
+
+  const tiedPartyIds: string[] = [];
+  for (const ids of groups.values()) {
+    if (ids.length > 1) tiedPartyIds.push(...ids);
+  }
+
+  if (tiedPartyIds.length > 0) {
+    return {
+      ...state,
+      tiedPartyIds,
+      orderedPartyIds: [],
+      parties: state.parties.map(p =>
+        tiedPartyIds.includes(p.id) ? { ...p, initiative: null } : p,
+      ),
+    };
+  }
+
   return {
     ...state,
     orderedPartyIds: sorted.map(p => p.id),
+    tiedPartyIds: [],
     winnerDeferred: false,
   };
 }
@@ -137,6 +166,7 @@ export function advancePhase(state: CombatState): CombatState {
       round: state.round + 1,
       currentPhase: 'declarations',
       orderedPartyIds: [],
+      tiedPartyIds: [],
       winnerDeferred: false,
       parties: state.parties.map(p => ({ ...p, initiative: null })),
     };

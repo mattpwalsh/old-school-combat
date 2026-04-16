@@ -91,10 +91,19 @@ export default function App({ isBanner = false }: AppProps) {
       if (!isBanner) {
         if (stored?.active) {
           const isDeclarations = stored.currentPhase === "declarations";
+          const isInitiativeResolved =
+            stored.currentPhase === "initiative" &&
+            (stored.orderedPartyIds?.length ?? 0) > 0;
           const itemCount = isDeclarations
             ? (stored.config?.declarations?.length ?? 0)
-            : 0;
-          const bannerHeight = isDeclarations ? 85 + itemCount * 28 : 85;
+            : isInitiativeResolved
+              ? (stored.orderedPartyIds?.length ?? 0)
+              : 0;
+          const bannerHeight = isInitiativeResolved
+            ? 110 + itemCount * 44
+            : isDeclarations
+              ? 85 + itemCount * 28
+              : 85;
           OBR.popover.open({
             id: BANNER_POPOVER_ID,
             url: `${window.location.origin}/?view=banner`,

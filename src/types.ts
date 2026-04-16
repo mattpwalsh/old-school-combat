@@ -12,6 +12,7 @@ export interface Party {
 export interface CombatConfig {
   allowDefer: boolean;
   declarations: string[];
+  initiativeDie: number;
 }
 
 export interface CombatState {
@@ -20,6 +21,8 @@ export interface CombatState {
   parties: Party[];
   /** Party IDs sorted highest-initiative-first after resolution. */
   orderedPartyIds: string[];
+  /** Party IDs that tied and must reroll. Empty when no tie. */
+  tiedPartyIds: string[];
   currentPhase: PhaseId;
   winnerDeferred: boolean;
   config: CombatConfig;

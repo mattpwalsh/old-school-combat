@@ -10,13 +10,13 @@ export default function BannerView({ state }: Props) {
 
   const group = getPhaseGroup(state, state.currentPhase);
   const isDeclarations = state.currentPhase === "declarations";
+  const isInitiativeResolved =
+    state.currentPhase === "initiative" && state.orderedPartyIds.length > 0;
 
   return (
-    <div
-      className={`banner${isDeclarations ? " banner-declarations" : ""} group-${group}`}
-    >
+    <div className={`banner group-${group}`}>
       <div className="banner-header-row">
-        <span className="banner-icon"></span>
+        <div className="banner-icon" />
         <div className="banner-content">
           <span className="banner-phase">{getPhaseLabel(state)}</span>
           <span className="banner-round">Round {state.round}</span>
@@ -32,6 +32,31 @@ export default function BannerView({ state }: Props) {
               </li>
             ))}
           </ul>
+        </div>
+      )}
+
+      {isInitiativeResolved && (
+        <div className="banner-initiative-results">
+          {state.orderedPartyIds.map((id, i) => {
+            const party = state.parties.find((p) => p.id === id);
+            const isWinner = i === 0;
+            const isLoser = i === state.orderedPartyIds.length - 1;
+            return (
+              <div
+                key={id}
+                className={`banner-initiative-row ${isWinner ? "winner" : isLoser ? "loser" : ""}`}
+              >
+                <span className="banner-initiative-rank">#{i + 1}</span>
+                <span className="banner-initiative-name">{party?.name}</span>
+                <span className="banner-initiative-roll">
+                  rolled {party?.initiative}
+                </span>
+                {isWinner && (
+                  <span className="banner-initiative-label">WINNER</span>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

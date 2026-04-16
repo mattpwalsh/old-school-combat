@@ -505,6 +505,57 @@ body {
   color: var(--text-dim);
 }
 
+/* ── Banner initiative results ────────────────────────────────────────────── */
+.banner-initiative-results {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.banner-initiative-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  border-radius: var(--radius);
+  font-size: 13px;
+  background: var(--surface-raised);
+}
+
+.banner-initiative-row.winner {
+  background: var(--winner-bg);
+  border: 1px solid var(--winner-border);
+}
+
+.banner-initiative-row.loser {
+  background: var(--loser-bg);
+  border: 1px solid var(--loser-border);
+}
+
+.banner-initiative-rank {
+  color: var(--text-muted);
+  font-size: 11px;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.banner-initiative-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.banner-initiative-roll {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.banner-initiative-label {
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  color: var(--accent-light);
+}
+
 .banner.group-winner {
   background: var(--winner-bg);
 }
@@ -514,10 +565,14 @@ body {
 }
 
 .banner-icon {
-  width: 36px;
+  width: 29px;
   height: 36px;
   flex-shrink: 0;
-  mask: url(/favicon.svg) 0% 0% / 36px;
+  mask-image: url(/favicon.svg);
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-mode: alpha;
   background-color: var(--text);
   margin-top: -10px;
 }
@@ -587,6 +642,140 @@ body {
   color: var(--text-muted);
   font-size: 12px;
   font-style: italic;
+}
+
+/* ── Section header row (title + inline action) ───────────────────────────── */
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Tie notice ───────────────────────────────────────────────────────────── */
+.tie-notice {
+  font-size: 13px;
+  color: var(--loser-border);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* ── Roll banner (initiative random roll results) ─────────────────────────── */
+.roll-banner {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.roll-result {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 13px;
+}
+
+.roll-name {
+  color: var(--text-dim);
+}
+
+.roll-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--accent-light);
+}
+
+/* ── Die selector ─────────────────────────────────────────────────────────── */
+.die-selector {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.btn-die {
+  padding: 4px 10px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--text-dim);
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: opacity 0.1s;
+}
+
+.btn-die.active {
+  border-color: var(--accent);
+  color: var(--accent-light);
+  background: var(--surface-raised);
+}
+
+.btn-die:hover:not(.active) {
+  opacity: 0.75;
+}
+
+/* ── RNG tester ───────────────────────────────────────────────────────────── */
+.rng-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rng-count-input {
+  width: 80px;
+  flex: none;
+}
+
+.rng-label {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.rng-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 100px;
+  padding-top: 20px;
+}
+
+.rng-bar-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex: 1;
+}
+
+.rng-bar-count {
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1;
+}
+
+.rng-bar-track {
+  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  background: var(--surface-raised);
+  border-radius: var(--radius) var(--radius) 0 0;
+  overflow: hidden;
+}
+
+.rng-bar-fill {
+  width: 100%;
+  background: var(--accent);
+  border-radius: var(--radius) var(--radius) 0 0;
+  transition: height 0.2s ease;
+}
+
+.rng-bar-label {
+  font-size: 11px;
+  color: var(--text-dim);
+  line-height: 1;
 }
 
 /* ── No Scene ─────────────────────────────────────────────────────────────── */
