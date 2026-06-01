@@ -115,9 +115,9 @@ export default function App({ isBanner = false }: AppProps) {
               width: 480,
               disableClickAway: true,
               anchorReference: "POSITION",
-              anchorPosition: { left: window.screen.width / 2, top: window.screen.height },
-              anchorOrigin: { horizontal: "CENTER", vertical: "BOTTOM" },
-              transformOrigin: { horizontal: "CENTER", vertical: "BOTTOM" },
+              anchorPosition: { left: window.screen.width / 2, top: 0 },
+              anchorOrigin: { horizontal: "CENTER", vertical: "TOP" },
+              transformOrigin: { horizontal: "CENTER", vertical: "TOP" },
             });
           }
         } else {
