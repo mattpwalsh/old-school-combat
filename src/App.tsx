@@ -113,6 +113,7 @@ export default function App({ isBanner = false }: AppProps) {
               url: `${window.location.origin}/?view=banner`,
               height: bannerHeight,
               width: 480,
+              disableClickAway: true,
               anchorReference: "POSITION",
               anchorPosition: { left: window.screen.width / 2, top: window.screen.height },
               anchorOrigin: { horizontal: "CENTER", vertical: "BOTTOM" },

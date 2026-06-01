@@ -1,5 +1,6 @@
+import OBR from "@owlbear-rodeo/sdk";
 import type { CombatState } from "../types";
-import { getPhaseLabel, getPhaseGroup } from "../combat";
+import { getPhaseLabel, getPhaseGroup, BANNER_POPOVER_ID } from "../combat";
 
 interface Props {
   state: CombatState;
@@ -21,6 +22,13 @@ export default function BannerView({ state }: Props) {
           <span className="banner-phase">{getPhaseLabel(state)}</span>
           <span className="banner-round">Round {state.round}</span>
         </div>
+        <button
+          className="banner-close"
+          onClick={() => OBR.popover.close(BANNER_POPOVER_ID)}
+          title="Dismiss"
+        >
+          ✕
+        </button>
       </div>
 
       {isDeclarations && state.config.declarations.length > 0 && (

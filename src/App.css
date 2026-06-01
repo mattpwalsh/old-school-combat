@@ -493,6 +493,23 @@ body {
   gap: 10px;
 }
 
+.banner-close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 14px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.banner-close:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
 .banner-declarations-list {
   display: flex;
   flex-direction: column;
