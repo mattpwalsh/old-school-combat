@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import OBR from "@owlbear-rodeo/sdk";
 import { DEFAULT_STATE, METADATA_KEY, BANNER_POPOVER_ID } from "./combat";
 import type { CombatState } from "./types";
@@ -15,6 +15,7 @@ export default function App({ isBanner = false }: AppProps) {
   const [role, setRole] = useState<"GM" | "PLAYER" | null>(null);
   const [state, setState] = useState<CombatState>(DEFAULT_STATE);
   const [sceneReady, setSceneReady] = useState(false);
+  const lastBannerPhaseRef = useRef<string | null>(null);
 
   useEffect(() => {
     const applyTheme = (theme: {
@@ -90,32 +91,36 @@ export default function App({ isBanner = false }: AppProps) {
 
       if (!isBanner) {
         if (stored?.active) {
-          const isDeclarations = stored.currentPhase === "declarations";
-          const isInitiativeResolved =
-            stored.currentPhase === "initiative" &&
-            (stored.orderedPartyIds?.length ?? 0) > 0;
-          const itemCount = isDeclarations
-            ? (stored.config?.declarations?.length ?? 0)
-            : isInitiativeResolved
-              ? (stored.orderedPartyIds?.length ?? 0)
-              : 0;
-          const bannerHeight = isInitiativeResolved
-            ? 110 + itemCount * 44
-            : isDeclarations
-              ? 85 + itemCount * 28
-              : 85;
-          OBR.popover.open({
-            id: BANNER_POPOVER_ID,
-            url: `${window.location.origin}/?view=banner`,
-            height: bannerHeight,
-            width: 480,
-            disableClickAway: true,
-            anchorReference: "POSITION",
-            anchorPosition: { left: window.screen.width / 2, top: window.screen.height },
-            anchorOrigin: { horizontal: "CENTER", vertical: "BOTTOM" },
-            transformOrigin: { horizontal: "CENTER", vertical: "BOTTOM" },
-          });
+          const phase = stored.currentPhase;
+          if (phase !== lastBannerPhaseRef.current) {
+            lastBannerPhaseRef.current = phase;
+            const isDeclarations = phase === "declarations";
+            const isInitiativeResolved =
+              phase === "initiative" &&
+              (stored.orderedPartyIds?.length ?? 0) > 0;
+            const itemCount = isDeclarations
+              ? (stored.config?.declarations?.length ?? 0)
+              : isInitiativeResolved
+                ? (stored.orderedPartyIds?.length ?? 0)
+                : 0;
+            const bannerHeight = isInitiativeResolved
+              ? 110 + itemCount * 44
+              : isDeclarations
+                ? 85 + itemCount * 28
+                : 85;
+            OBR.popover.open({
+              id: BANNER_POPOVER_ID,
+              url: `${window.location.origin}/?view=banner`,
+              height: bannerHeight,
+              width: 480,
+              anchorReference: "POSITION",
+              anchorPosition: { left: window.screen.width / 2, top: window.screen.height },
+              anchorOrigin: { horizontal: "CENTER", vertical: "BOTTOM" },
+              transformOrigin: { horizontal: "CENTER", vertical: "BOTTOM" },
+            });
+          }
         } else {
+          lastBannerPhaseRef.current = null;
           OBR.popover.close(BANNER_POPOVER_ID);
         }
       }
